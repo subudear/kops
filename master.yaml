@@ -1,0 +1,19 @@
+{{range $i, $id := .availability_zone_names.value}}
+apiVersion: kops.k8s.io/v1alpha2
+kind: InstanceGroup
+metadata:
+  creationTimestamp: null
+  labels:
+    kops.k8s.io/cluster: {{$.cluster_name.value}}
+  name: master-{{.}}
+spec:
+  image: kope.io/k8s-1.15-debian-stretch-amd64-hvm-ebs-2020-01-17
+  machineType: t2.small
+  maxSize: 1
+  minSize: 1
+  nodeLabels:
+    kops.k8s.io/instancegroup: master-{{.}}
+  role: Master
+  subnets:
+  - private-kops.{{index $.availability_zone_names.value $i}}.{{ $.cluster_name.value }}
+---{{end}}
